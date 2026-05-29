@@ -3,603 +3,600 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#1a1a2e">
+<meta name="theme-color" content="#1a1020">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="MemoCards">
 <link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Lato:wght@300;400;600&display=swap" rel="stylesheet">
 <title>MemoCards</title>
 <style>
-  :root {
-    --bg: #0f0f1a;
-    --bg2: #1a1a2e;
-    --bg3: #16213e;
-    --surface: #1e1e35;
-    --surface2: #252540;
-    --border: rgba(255,255,255,0.08);
-    --border2: rgba(255,255,255,0.15);
-    --text: #f0f0ff;
-    --text2: #a0a0c0;
-    --text3: #606080;
-    --accent: #7c6af7;
-    --accent2: #9d8ff9;
-    --accent-glow: rgba(124,106,247,0.3);
-    --green: #4ade80;
-    --green-bg: rgba(74,222,128,0.12);
-    --amber: #fbbf24;
-    --amber-bg: rgba(251,191,36,0.12);
-    --red: #f87171;
-    --red-bg: rgba(248,113,113,0.12);
-    --blue: #60a5fa;
-    --blue-bg: rgba(96,165,250,0.12);
-    --radius: 12px;
-    --radius-sm: 8px;
-    --radius-lg: 18px;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  body { background: var(--bg); color: var(--text); min-height: 100dvh; overflow-x: hidden; }
-  button { cursor: pointer; font-family: inherit; border: none; background: none; color: inherit; }
+:root {
+  --bg:        #16101f;
+  --bg2:       #1e1530;
+  --bg3:       #261c3a;
+  --surface:   #2d2245;
+  --surface2:  #362952;
+  --lavender:  #c4aee8;
+  --lavender2: #a98fd4;
+  --lav-pale:  rgba(196,174,232,0.12);
+  --lav-glow:  rgba(196,174,232,0.22);
+  --sage:      #8aab7a;
+  --sage2:     #6d9060;
+  --sage-pale: rgba(138,171,122,0.12);
+  --mauve:     #b87fa8;
+  --mauve2:    #9b6390;
+  --rose:      #d49ab0;
+  --rose-pale: rgba(212,154,176,0.15);
+  --border:    rgba(196,174,232,0.12);
+  --border2:   rgba(196,174,232,0.22);
+  --text:      #f0e8ff;
+  --text2:     #c8b8e8;
+  --text3:     #8878a8;
+  --shadow:    0 4px 28px rgba(0,0,0,0.35);
+  --shadow-lg: 0 8px 48px rgba(0,0,0,0.45);
+  --radius:    16px;
+  --radius-sm: 10px;
+  --radius-lg: 24px;
+  --radius-xl: 32px;
+  font-family: 'Lato', sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body { background: var(--bg); color: var(--text); min-height: 100dvh; overflow-x: hidden; }
+button { cursor: pointer; font-family: inherit; border: none; background: none; color: inherit; }
 
-  /* ── NAV ── */
-  .nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg2); border-top: 1px solid var(--border); display: flex; padding: 8px 0 max(8px, env(safe-area-inset-bottom)); z-index: 100; }
-  .nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px 0; font-size: 10px; color: var(--text3); transition: color 0.15s; }
-  .nav-btn.active { color: var(--accent2); }
-  .nav-btn svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+/* ── SVG FLORAL ILLUSTRATIONS (inline, no external) ── */
+.floral-bg {
+  position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden;
+}
+.floral-bg svg { position: absolute; }
 
-  /* ── SCREENS ── */
-  .screen { display: none; padding: 0 0 80px; min-height: 100dvh; }
-  .screen.active { display: block; }
-  .top-bar { padding: 56px 20px 16px; display: flex; align-items: flex-end; justify-content: space-between; }
-  .top-bar h1 { font-size: 26px; font-weight: 700; letter-spacing: -0.5px; }
-  .top-bar p { font-size: 13px; color: var(--text2); margin-top: 2px; }
+/* ── NAV ── */
+.nav {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: rgba(22,16,31,0.92); backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-top: 1px solid var(--border2);
+  display: flex; padding: 8px 0 max(10px,env(safe-area-inset-bottom)); z-index: 100;
+}
+.nav-btn { flex:1; display:flex; flex-direction:column; align-items:center; gap:3px; padding:6px 0; font-size:10px; color:var(--text3); font-weight:400; letter-spacing:.5px; text-transform:uppercase; transition:color .2s; }
+.nav-btn.active { color:var(--lavender); }
+.nav-btn svg { width:20px; height:20px; stroke:currentColor; fill:none; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
 
-  /* ── CARDS / LISTS ── */
-  .section { padding: 0 16px; margin-bottom: 24px; }
-  .section-title { font-size: 11px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; padding: 0 4px; }
-  .folder-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px 18px; margin-bottom: 10px; display: flex; align-items: center; gap: 14px; transition: background 0.15s, transform 0.1s; cursor: pointer; -webkit-user-select: none; }
-  .folder-card:active { transform: scale(0.98); background: var(--surface2); }
-  .folder-icon { width: 44px; height: 44px; border-radius: var(--radius); display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
-  .folder-info { flex: 1; min-width: 0; }
-  .folder-name { font-size: 16px; font-weight: 600; }
-  .folder-meta { font-size: 12px; color: var(--text3); margin-top: 2px; }
-  .folder-arrow { color: var(--text3); font-size: 18px; }
-  .deck-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 8px; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: background 0.15s, transform 0.1s; }
-  .deck-card:active { transform: scale(0.98); background: var(--surface2); }
-  .deck-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-  .deck-info { flex: 1; min-width: 0; }
-  .deck-name { font-size: 15px; font-weight: 500; }
-  .deck-meta { font-size: 12px; color: var(--text3); margin-top: 1px; }
-  .deck-due { font-size: 12px; font-weight: 600; color: var(--red); }
+/* ── SCREENS ── */
+.screen { display:none; padding:0 0 90px; min-height:100dvh; position:relative; z-index:1; }
+.screen.active { display:block; }
 
-  /* ── STUDY SCREEN ── */
-  #study-screen { background: var(--bg); }
-  .study-header { padding: 52px 20px 12px; display: flex; align-items: center; gap: 12px; }
-  .back-btn { width: 36px; height: 36px; border-radius: 50%; background: var(--surface); display: flex; align-items: center; justify-content: center; color: var(--text2); font-size: 20px; flex-shrink: 0; }
-  .study-title { font-size: 16px; font-weight: 600; flex: 1; }
-  .progress-bar { height: 3px; background: var(--surface2); margin: 0 20px 20px; border-radius: 3px; overflow: hidden; }
-  .progress-fill { height: 100%; background: var(--accent); border-radius: 3px; transition: width 0.3s; }
-  .card-wrap { padding: 0 16px; }
-  .flash-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); min-height: 260px; padding: 28px 24px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; cursor: pointer; transition: transform 0.05s; position: relative; }
-  .flash-card:active { transform: scale(0.99); }
-  .card-type-badge { position: absolute; top: 14px; left: 14px; font-size: 10px; font-weight: 600; padding: 3px 8px; border-radius: 20px; background: var(--surface2); color: var(--text3); text-transform: uppercase; letter-spacing: 0.5px; }
-  .card-counter { position: absolute; top: 14px; right: 14px; font-size: 11px; color: var(--text3); }
-  .card-q { font-size: 18px; font-weight: 600; line-height: 1.4; color: var(--text); }
-  .card-divider { width: 40px; height: 1px; background: var(--border2); margin: 16px 0; }
-  .card-a { font-size: 15px; color: var(--text2); line-height: 1.6; }
-  .card-explain { margin-top: 12px; padding: 10px 14px; background: var(--bg3); border-radius: var(--radius-sm); border-left: 2px solid var(--accent); font-size: 13px; color: var(--text3); text-align: left; line-height: 1.5; }
-  .flip-zone { padding: 16px; text-align: center; }
-  .flip-btn { background: var(--accent); color: white; border-radius: 14px; padding: 14px 40px; font-size: 16px; font-weight: 600; width: 100%; transition: opacity 0.15s, transform 0.1s; }
-  .flip-btn:active { opacity: 0.85; transform: scale(0.98); }
-  .rate-btns { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; padding: 0 16px 16px; }
-  .rate-btn { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 4px; display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 12px; font-weight: 600; transition: transform 0.1s, background 0.1s; }
-  .rate-btn:active { transform: scale(0.96); }
-  .rate-btn .int { font-size: 10px; font-weight: 400; color: var(--text3); }
-  .rate-again { color: var(--red); border-color: rgba(248,113,113,0.25); }
-  .rate-again:active { background: var(--red-bg); }
-  .rate-hard { color: var(--amber); border-color: rgba(251,191,36,0.25); }
-  .rate-hard:active { background: var(--amber-bg); }
-  .rate-good { color: var(--green); border-color: rgba(74,222,128,0.25); }
-  .rate-good:active { background: var(--green-bg); }
-  .rate-easy { color: var(--blue); border-color: rgba(96,165,250,0.25); }
-  .rate-easy:active { background: var(--blue-bg); }
-  .done-screen { padding: 60px 24px; text-align: center; }
-  .done-emoji { font-size: 56px; margin-bottom: 16px; }
-  .done-title { font-size: 24px; font-weight: 700; margin-bottom: 8px; }
-  .done-sub { font-size: 15px; color: var(--text2); margin-bottom: 32px; }
-  .done-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 32px; }
-  .done-stat { background: var(--surface); border-radius: var(--radius); padding: 16px; }
-  .done-stat-n { font-size: 26px; font-weight: 700; color: var(--accent2); }
-  .done-stat-l { font-size: 12px; color: var(--text3); margin-top: 2px; }
-  .done-btn { background: var(--surface2); border-radius: var(--radius); padding: 14px; font-size: 15px; font-weight: 500; width: 100%; color: var(--text); }
+/* ── BACK BTN (top-left, all inner screens) ── */
+.back-top {
+  position: absolute; top: 52px; left: 18px;
+  display: flex; align-items: center; gap: 6px;
+  color: var(--text3); font-size: 13px; font-weight: 500;
+  background: var(--surface); border: 1px solid var(--border2);
+  padding: 7px 13px 7px 10px; border-radius: 20px;
+  transition: color .15s, background .15s; z-index: 10;
+}
+.back-top:active { background: var(--surface2); color: var(--lavender); }
+.back-top svg { width:14px; height:14px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; flex-shrink:0; }
 
-  /* ── ADD/EDIT MODALS ── */
-  .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 200; display: none; align-items: flex-end; justify-content: center; }
-  .modal-bg.open { display: flex; }
-  .modal { background: var(--bg2); border-radius: 24px 24px 0 0; padding: 20px 20px max(20px,env(safe-area-inset-bottom)); width: 100%; max-height: 90dvh; overflow-y: auto; }
-  .modal-handle { width: 36px; height: 4px; background: var(--border2); border-radius: 4px; margin: 0 auto 16px; }
-  .modal-title { font-size: 17px; font-weight: 700; margin-bottom: 16px; }
-  .field { margin-bottom: 14px; }
-  .field label { font-size: 12px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 6px; }
-  .field input, .field textarea, .field select { width: 100%; background: var(--surface); border: 1px solid var(--border2); border-radius: var(--radius-sm); padding: 11px 13px; color: var(--text); font-size: 15px; font-family: inherit; outline: none; transition: border-color 0.15s; }
-  .field input:focus, .field textarea:focus, .field select:focus { border-color: var(--accent); }
-  .field textarea { resize: none; min-height: 80px; line-height: 1.5; }
-  .field select option { background: var(--bg2); }
-  .emoji-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
-  .emoji-opt { font-size: 22px; padding: 8px; border-radius: var(--radius-sm); background: var(--surface); text-align: center; transition: background 0.1s; }
-  .emoji-opt.sel { background: var(--accent-glow); border: 1px solid var(--accent); }
-  .modal-actions { display: flex; gap: 10px; margin-top: 6px; }
-  .btn-cancel { flex: 1; background: var(--surface2); border-radius: var(--radius); padding: 13px; font-size: 15px; font-weight: 500; color: var(--text2); }
-  .btn-save { flex: 2; background: var(--accent); border-radius: var(--radius); padding: 13px; font-size: 15px; font-weight: 600; color: white; }
-  .btn-danger { background: var(--red-bg); color: var(--red); border-radius: var(--radius); padding: 13px; font-size: 15px; font-weight: 500; margin-top: 10px; width: 100%; border: 1px solid rgba(248,113,113,0.2); }
+/* ── TOP BAR ── */
+.top-bar { padding: 52px 22px 18px; }
+.top-bar h1 { font-family:'Playfair Display',serif; font-size:30px; font-weight:600; color:var(--text); letter-spacing:-.3px; }
+.top-bar h1 em { font-style:italic; color:var(--lavender); }
+.top-bar p { font-size:13px; color:var(--text3); margin-top:4px; font-weight:300; letter-spacing:.3px; }
+.inner-top-bar { padding: 108px 22px 16px; display:flex; align-items:center; justify-content:space-between; }
+.inner-top-bar h1 { font-family:'Playfair Display',serif; font-size:24px; font-weight:600; color:var(--text); }
+.inner-top-bar p { font-size:12px; color:var(--text3); margin-top:3px; font-weight:300; }
+.edit-btn { color:var(--text3); font-size:12px; padding:7px 12px; background:var(--surface); border-radius:var(--radius-sm); border:1px solid var(--border2); white-space:nowrap; }
 
-  /* ── FAB ── */
-  .fab { position: fixed; bottom: 80px; right: 20px; width: 52px; height: 52px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 20px var(--accent-glow); z-index: 90; font-size: 24px; color: white; transition: transform 0.15s; }
-  .fab:active { transform: scale(0.93); }
+/* ── SECTIONS ── */
+.section { padding:0 18px; margin-bottom:24px; }
+.section-title { font-size:10px; font-weight:600; color:var(--text3); text-transform:uppercase; letter-spacing:1.5px; margin-bottom:12px; padding:0 4px; display:flex; align-items:center; gap:8px; }
+.section-title::after { content:''; flex:1; height:1px; background:var(--border); }
 
-  /* ── MISC ── */
-  .chip { display: inline-block; font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 20px; }
-  .chip-new { background: var(--blue-bg); color: var(--blue); }
-  .chip-due { background: var(--red-bg); color: var(--red); }
-  .chip-ok { background: var(--green-bg); color: var(--green); }
-  .empty-state { text-align: center; padding: 48px 24px; color: var(--text3); }
-  .empty-state .emo { font-size: 40px; margin-bottom: 12px; }
-  .empty-state p { font-size: 14px; }
-  .color-dots { display: flex; gap: 8px; flex-wrap: wrap; }
-  .color-dot { width: 28px; height: 28px; border-radius: 50%; cursor: pointer; transition: transform 0.1s; border: 2px solid transparent; }
-  .color-dot.sel { border-color: white; transform: scale(1.15); }
-  input[type=text]::placeholder, textarea::placeholder { color: var(--text3); }
-  .vocab-item { display: flex; justify-content: space-between; align-items: flex-start; padding: 12px 14px; background: var(--surface); border-radius: var(--radius-sm); margin-bottom: 6px; gap: 12px; }
-  .vocab-word { font-size: 14px; font-weight: 600; }
-  .vocab-def { font-size: 13px; color: var(--text2); margin-top: 2px; }
-  .vocab-del { color: var(--text3); font-size: 18px; padding: 2px; flex-shrink: 0; }
-  .list-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 16px; margin-bottom: 8px; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: background 0.15s; }
-  .list-card:active { background: var(--surface2); }
-  .study-start-btn { background: var(--accent); color: white; border-radius: var(--radius); padding: 15px; font-size: 16px; font-weight: 600; width: 100%; margin-bottom: 12px; transition: opacity 0.15s; }
-  .study-start-btn:active { opacity: 0.85; }
-  .import-area { border: 1.5px dashed var(--border2); border-radius: var(--radius); padding: 20px; text-align: center; color: var(--text3); font-size: 14px; margin-bottom: 14px; cursor: pointer; }
-  .tab-row { display: flex; background: var(--surface); border-radius: var(--radius); padding: 3px; margin-bottom: 16px; }
-  .tab { flex: 1; padding: 8px; text-align: center; border-radius: var(--radius-sm); font-size: 13px; font-weight: 500; color: var(--text3); transition: all 0.15s; cursor: pointer; }
-  .tab.active { background: var(--surface2); color: var(--text); }
+/* ── FOLDER CARDS ── */
+.folder-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding:16px 18px; margin-bottom:12px;
+  display:flex; align-items:center; gap:14px;
+  box-shadow: var(--shadow); cursor:pointer;
+  transition:transform .2s, background .15s;
+  position:relative; overflow:hidden;
+}
+.folder-card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg,var(--fc,var(--lavender)) 0%,transparent 80%); }
+.folder-card:active { transform:scale(0.97); background:var(--surface2); }
+.folder-icon { width:46px; height:46px; border-radius:var(--radius); display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0; }
+.folder-info { flex:1; min-width:0; }
+.folder-name { font-family:'Playfair Display',serif; font-size:17px; font-weight:600; color:var(--text); }
+.folder-meta { font-size:12px; color:var(--text3); margin-top:2px; font-weight:300; }
+.chip { display:inline-block; font-size:11px; font-weight:600; padding:4px 10px; border-radius:20px; }
+.chip-due { background:var(--rose-pale); color:var(--rose); }
+.chip-ok { background:var(--sage-pale); color:var(--sage); }
+
+/* ── DECK CARDS ── */
+.deck-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:13px 16px; margin-bottom:8px; display:flex; align-items:center; gap:12px; cursor:pointer; transition:transform .15s, background .15s; }
+.deck-card:active { transform:scale(0.97); background:var(--surface2); }
+.deck-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+.deck-info { flex:1; min-width:0; }
+.deck-name { font-size:14px; font-weight:600; color:var(--text); }
+.deck-meta { font-size:11px; color:var(--text3); margin-top:2px; font-weight:300; }
+.deck-due { font-size:11px; font-weight:700; color:var(--rose); }
+
+/* ── STUDY HEADER ── */
+.study-header { padding:52px 18px 12px; display:flex; align-items:center; gap:10px; }
+.study-title { font-family:'Playfair Display',serif; font-size:16px; font-weight:600; flex:1; color:var(--text); }
+.progress-bar { height:3px; background:var(--surface2); margin:0 18px 18px; border-radius:3px; overflow:hidden; }
+.progress-fill { height:100%; background:linear-gradient(90deg,var(--lavender2),var(--mauve)); border-radius:3px; transition:width .4s ease; }
+
+/* ── FLASH CARD ── */
+.card-wrap { padding:0 16px; }
+.flash-card {
+  background:var(--surface); border:1px solid var(--border2);
+  border-radius:var(--radius-xl); min-height:280px; padding:32px 26px;
+  display:flex; flex-direction:column; justify-content:center; align-items:center;
+  text-align:center; cursor:pointer; box-shadow:var(--shadow-lg);
+  position:relative; overflow:hidden; transition:transform .1s;
+}
+.flash-card:active { transform:scale(0.99); }
+/* floral corner decoration inside card */
+.flash-card::after { content:''; position:absolute; bottom:-10px; right:-10px; width:90px; height:90px; background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='8' fill='%23c4aee8' opacity='.13'/%3E%3Ccircle cx='50' cy='28' r='6' fill='%23c4aee8' opacity='.1'/%3E%3Ccircle cx='50' cy='72' r='6' fill='%238aab7a' opacity='.1'/%3E%3Ccircle cx='28' cy='50' r='6' fill='%23d49ab0' opacity='.1'/%3E%3Ccircle cx='72' cy='50' r='6' fill='%23c4aee8' opacity='.1'/%3E%3Ccircle cx='33' cy='33' r='4' fill='%238aab7a' opacity='.08'/%3E%3Ccircle cx='67' cy='33' r='4' fill='%23d49ab0' opacity='.08'/%3E%3Ccircle cx='33' cy='67' r='4' fill='%23c4aee8' opacity='.08'/%3E%3Ccircle cx='67' cy='67' r='4' fill='%238aab7a' opacity='.08'/%3E%3C/svg%3E") no-repeat center/contain; pointer-events:none; }
+.card-type-badge { position:absolute; top:14px; left:14px; font-size:10px; font-weight:600; padding:4px 10px; border-radius:20px; background:var(--lav-pale); color:var(--lavender); letter-spacing:.5px; text-transform:uppercase; }
+.card-counter { position:absolute; top:14px; right:14px; font-size:11px; color:var(--text3); }
+.card-q { font-family:'Playfair Display',serif; font-size:19px; font-weight:600; line-height:1.45; color:var(--text); }
+.card-divider { width:48px; height:2px; background:linear-gradient(90deg,var(--lavender),var(--mauve)); border-radius:2px; margin:18px 0; }
+.card-a { font-size:15px; color:var(--text2); line-height:1.65; font-weight:300; }
+.card-explain { margin-top:14px; padding:12px 16px; background:var(--lav-pale); border-radius:var(--radius-sm); border-left:3px solid var(--lavender2); font-size:13px; color:var(--text3); text-align:left; line-height:1.55; }
+
+/* ── FLIP ── */
+.flip-zone { padding:14px 16px; }
+.flip-btn { background:linear-gradient(135deg,var(--mauve2) 0%,var(--lavender2) 100%); color:white; border-radius:var(--radius-lg); padding:15px 40px; font-size:15px; font-weight:600; width:100%; letter-spacing:.3px; box-shadow:0 4px 20px rgba(169,143,212,.35); transition:transform .1s; }
+.flip-btn:active { transform:scale(0.98); }
+
+/* ── RATE ── */
+.rate-btns { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; padding:0 16px 16px; }
+.rate-btn { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:11px 4px; display:flex; flex-direction:column; align-items:center; gap:4px; font-size:11px; font-weight:600; transition:transform .1s, background .1s; }
+.rate-btn:active { transform:scale(0.95); }
+.rate-btn .int { font-size:10px; font-weight:300; color:var(--text3); }
+.rate-again { color:var(--rose); } .rate-again:active { background:var(--rose-pale); }
+.rate-hard  { color:#c8a060; } .rate-hard:active  { background:rgba(200,160,96,.1); }
+.rate-good  { color:var(--sage); } .rate-good:active  { background:var(--sage-pale); }
+.rate-easy  { color:var(--lavender); } .rate-easy:active { background:var(--lav-pale); }
+
+/* ── DONE ── */
+.done-screen { padding:50px 24px; text-align:center; }
+.done-emoji { font-size:52px; margin-bottom:14px; }
+.done-title { font-family:'Playfair Display',serif; font-size:26px; font-weight:600; margin-bottom:8px; color:var(--text); }
+.done-sub { font-size:14px; color:var(--text3); margin-bottom:28px; font-weight:300; }
+.done-stats { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin-bottom:28px; }
+.done-stat { background:var(--surface); border-radius:var(--radius); padding:18px; border:1px solid var(--border); }
+.done-stat-n { font-family:'Playfair Display',serif; font-size:28px; font-weight:600; color:var(--lavender); }
+.done-stat-l { font-size:12px; color:var(--text3); margin-top:2px; font-weight:300; }
+.done-btn { background:var(--surface2); border:1px solid var(--border2); border-radius:var(--radius); padding:14px; font-size:15px; font-weight:500; width:100%; color:var(--text2); }
+
+/* ── FAB ── */
+.fab { position:fixed; bottom:82px; right:20px; width:54px; height:54px; background:linear-gradient(135deg,var(--mauve2),var(--lavender2)); border-radius:50%; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 24px rgba(169,143,212,.45); z-index:90; font-size:26px; color:white; transition:transform .15s; }
+.fab:active { transform:scale(0.9); }
+
+/* ── MODALS ── */
+.modal-bg { position:fixed; inset:0; background:rgba(10,6,18,.65); backdrop-filter:blur(6px); z-index:200; display:none; align-items:flex-end; }
+.modal-bg.open { display:flex; }
+.modal { background:var(--bg2); border-radius:28px 28px 0 0; padding:20px 20px max(20px,env(safe-area-inset-bottom)); width:100%; max-height:92dvh; overflow-y:auto; border-top:1px solid var(--border2); }
+.modal-handle { width:36px; height:4px; background:var(--border2); border-radius:4px; margin:0 auto 18px; }
+.modal-title { font-family:'Playfair Display',serif; font-size:20px; font-weight:600; margin-bottom:18px; color:var(--text); }
+.field { margin-bottom:14px; }
+.field label { font-size:11px; font-weight:600; color:var(--text3); text-transform:uppercase; letter-spacing:1px; display:block; margin-bottom:7px; }
+.field input,.field textarea,.field select { width:100%; background:var(--surface); border:1px solid var(--border2); border-radius:var(--radius-sm); padding:12px 14px; color:var(--text); font-size:15px; font-family:'Lato',sans-serif; outline:none; transition:border-color .2s,box-shadow .2s; }
+.field input:focus,.field textarea:focus { border-color:var(--lavender2); box-shadow:0 0 0 3px rgba(169,143,212,.18); }
+.field textarea { resize:none; min-height:80px; line-height:1.5; }
+.emoji-grid { display:grid; grid-template-columns:repeat(6,1fr); gap:8px; }
+.emoji-opt { font-size:22px; padding:8px; border-radius:var(--radius-sm); background:var(--surface); text-align:center; border:1px solid transparent; transition:all .15s; cursor:pointer; }
+.emoji-opt.sel { background:var(--lav-pale); border-color:var(--lavender2); transform:scale(1.1); }
+.color-dots { display:flex; gap:10px; flex-wrap:wrap; }
+.color-dot { width:30px; height:30px; border-radius:50%; cursor:pointer; transition:transform .15s; border:2px solid transparent; }
+.color-dot.sel { border-color:var(--text); transform:scale(1.2); }
+.modal-actions { display:flex; gap:10px; margin-top:8px; }
+.btn-cancel { flex:1; background:var(--surface2); border:1px solid var(--border2); border-radius:var(--radius); padding:13px; font-size:15px; color:var(--text2); }
+.btn-save { flex:2; background:linear-gradient(135deg,var(--mauve2),var(--lavender2)); border-radius:var(--radius); padding:13px; font-size:15px; font-weight:600; color:white; box-shadow:0 4px 16px rgba(169,143,212,.3); }
+.btn-danger { background:var(--rose-pale); color:var(--rose); border-radius:var(--radius); padding:13px; font-size:15px; font-weight:500; margin-top:10px; width:100%; border:1px solid rgba(212,154,176,.2); }
+.tab-row { display:flex; background:var(--surface); border-radius:var(--radius); padding:3px; margin-bottom:16px; }
+.tab { flex:1; padding:9px; text-align:center; border-radius:var(--radius-sm); font-size:13px; font-weight:500; color:var(--text3); transition:all .15s; cursor:pointer; }
+.tab.active { background:var(--lav-pale); color:var(--lavender); }
+
+/* ── STUDY START ── */
+.study-start-btn { background:linear-gradient(135deg,var(--mauve2),var(--lavender2)); color:white; border-radius:var(--radius-lg); padding:16px; font-size:15px; font-weight:600; width:100%; margin-bottom:14px; box-shadow:0 4px 20px rgba(169,143,212,.3); letter-spacing:.3px; }
+.study-start-btn:active { opacity:.85; }
+
+/* ── STATS ── */
+.stats-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:20px; }
+.stat-card { background:var(--surface); border-radius:var(--radius); padding:18px; border:1px solid var(--border); text-align:center; }
+.stat-n { font-family:'Playfair Display',serif; font-size:28px; font-weight:600; }
+.stat-l { font-size:11px; color:var(--text3); margin-top:3px; font-weight:300; text-transform:uppercase; letter-spacing:.5px; }
+
+/* ── EMPTY ── */
+.empty-state { text-align:center; padding:52px 24px; color:var(--text3); }
+.empty-state .emo { font-size:42px; margin-bottom:12px; }
+.empty-state p { font-size:14px; font-weight:300; line-height:1.6; }
+
+input::placeholder,textarea::placeholder { color:var(--text3); }
 </style>
 </head>
 <body>
 
-<!-- ═══════════════ HOME SCREEN ═══════════════ -->
+<!-- ── FLORAL BACKGROUND ILLUSTRATIONS ── -->
+<div class="floral-bg">
+  <svg width="320" height="320" style="top:-40px;right:-60px;opacity:0.55" viewBox="0 0 320 320">
+    <!-- large flower top right -->
+    <g transform="translate(200,120)">
+      <ellipse rx="28" ry="50" fill="none" stroke="#c4aee8" stroke-width="1.2" opacity=".5" transform="rotate(0)"/>
+      <ellipse rx="28" ry="50" fill="none" stroke="#c4aee8" stroke-width="1.2" opacity=".5" transform="rotate(45)"/>
+      <ellipse rx="28" ry="50" fill="none" stroke="#c4aee8" stroke-width="1.2" opacity=".5" transform="rotate(90)"/>
+      <ellipse rx="28" ry="50" fill="none" stroke="#c4aee8" stroke-width="1.2" opacity=".5" transform="rotate(135)"/>
+      <circle r="12" fill="none" stroke="#d49ab0" stroke-width="1.5" opacity=".6"/>
+      <circle r="5" fill="#d49ab0" opacity=".3"/>
+    </g>
+    <!-- small flower -->
+    <g transform="translate(90,60)">
+      <ellipse rx="14" ry="26" fill="none" stroke="#8aab7a" stroke-width="1" opacity=".45" transform="rotate(0)"/>
+      <ellipse rx="14" ry="26" fill="none" stroke="#8aab7a" stroke-width="1" opacity=".45" transform="rotate(60)"/>
+      <ellipse rx="14" ry="26" fill="none" stroke="#8aab7a" stroke-width="1" opacity=".45" transform="rotate(120)"/>
+      <circle r="7" fill="none" stroke="#c4aee8" stroke-width="1" opacity=".5"/>
+    </g>
+    <!-- stems & leaves -->
+    <path d="M200 170 Q190 220 185 280" fill="none" stroke="#8aab7a" stroke-width="1.3" opacity=".4"/>
+    <path d="M193 200 Q170 190 158 198" fill="none" stroke="#8aab7a" stroke-width="1" opacity=".35"/>
+    <ellipse cx="170" cy="192" rx="14" ry="8" fill="#8aab7a" opacity=".18" transform="rotate(-20,170,192)"/>
+    <path d="M188 230 Q210 220 218 228" fill="none" stroke="#8aab7a" stroke-width="1" opacity=".3"/>
+    <ellipse cx="207" cy="222" rx="12" ry="7" fill="#8aab7a" opacity=".15" transform="rotate(15,207,222)"/>
+    <!-- tiny dots -->
+    <circle cx="130" cy="150" r="2.5" fill="#c4aee8" opacity=".3"/>
+    <circle cx="260" cy="80" r="2" fill="#d49ab0" opacity=".3"/>
+    <circle cx="75" cy="110" r="2" fill="#8aab7a" opacity=".3"/>
+  </svg>
+
+  <svg width="280" height="300" style="bottom:80px;left:-50px;opacity:0.45" viewBox="0 0 280 300">
+    <!-- flower bottom left -->
+    <g transform="translate(80,160)">
+      <ellipse rx="22" ry="40" fill="none" stroke="#d49ab0" stroke-width="1.2" opacity=".55" transform="rotate(0)"/>
+      <ellipse rx="22" ry="40" fill="none" stroke="#d49ab0" stroke-width="1.2" opacity=".55" transform="rotate(60)"/>
+      <ellipse rx="22" ry="40" fill="none" stroke="#d49ab0" stroke-width="1.2" opacity=".55" transform="rotate(120)"/>
+      <circle r="10" fill="none" stroke="#c4aee8" stroke-width="1.3" opacity=".5"/>
+      <circle r="4" fill="#c4aee8" opacity=".25"/>
+    </g>
+    <!-- bud -->
+    <g transform="translate(170,80)">
+      <ellipse rx="10" ry="18" fill="none" stroke="#c4aee8" stroke-width="1" opacity=".4" transform="rotate(0)"/>
+      <ellipse rx="10" ry="18" fill="none" stroke="#c4aee8" stroke-width="1" opacity=".4" transform="rotate(72)"/>
+      <ellipse rx="10" ry="18" fill="none" stroke="#c4aee8" stroke-width="1" opacity=".4" transform="rotate(144)"/>
+      <circle r="5" fill="#d49ab0" opacity=".2"/>
+    </g>
+    <!-- stems -->
+    <path d="M80 200 Q70 240 68 290" fill="none" stroke="#8aab7a" stroke-width="1.2" opacity=".4"/>
+    <path d="M74 225 Q52 215 44 220" fill="none" stroke="#8aab7a" stroke-width="1" opacity=".3"/>
+    <ellipse cx="52" cy="216" rx="13" ry="7" fill="#8aab7a" opacity=".15" transform="rotate(-15,52,216)"/>
+    <path d="M170 98 Q165 130 162 160" fill="none" stroke="#8aab7a" stroke-width="1" opacity=".35"/>
+    <!-- grass blades -->
+    <path d="M20 280 Q25 250 30 240" fill="none" stroke="#8aab7a" stroke-width="1.2" opacity=".3"/>
+    <path d="M35 285 Q38 255 44 243" fill="none" stroke="#8aab7a" stroke-width="1.2" opacity=".28"/>
+    <path d="M10 290 Q14 265 18 254" fill="none" stroke="#8aab7a" stroke-width="1" opacity=".25"/>
+    <!-- tiny stars -->
+    <circle cx="140" cy="220" r="2" fill="#c4aee8" opacity=".35"/>
+    <circle cx="200" cy="140" r="1.8" fill="#d49ab0" opacity=".3"/>
+    <circle cx="50" cy="130" r="2" fill="#8aab7a" opacity=".3"/>
+  </svg>
+
+  <!-- scattered tiny blossoms -->
+  <svg width="100%" height="100%" style="opacity:0.25" viewBox="0 0 390 844" preserveAspectRatio="xMidYMid slice">
+    <g fill="none" stroke="#c4aee8" stroke-width="0.8">
+      <g transform="translate(40,350)"><ellipse rx="7" ry="13" opacity=".6" transform="rotate(0)"/><ellipse rx="7" ry="13" opacity=".6" transform="rotate(60)"/><ellipse rx="7" ry="13" opacity=".6" transform="rotate(120)"/><circle r="3.5" opacity=".5"/></g>
+      <g transform="translate(350,400)"><ellipse rx="9" ry="16" opacity=".5" transform="rotate(0)"/><ellipse rx="9" ry="16" opacity=".5" transform="rotate(72)"/><ellipse rx="9" ry="16" opacity=".5" transform="rotate(144)"/><circle r="4" opacity=".4"/></g>
+      <g transform="translate(180,700)"><ellipse rx="6" ry="11" opacity=".5" transform="rotate(30)"/><ellipse rx="6" ry="11" opacity=".5" transform="rotate(90)"/><ellipse rx="6" ry="11" opacity=".5" transform="rotate(150)"/><circle r="3" opacity=".4"/></g>
+    </g>
+    <g fill="#8aab7a" opacity=".2">
+      <ellipse cx="60" cy="500" rx="16" ry="8" transform="rotate(-25,60,500)"/>
+      <ellipse cx="320" cy="600" rx="14" ry="7" transform="rotate(20,320,600)"/>
+      <ellipse cx="200" cy="300" rx="12" ry="6" transform="rotate(-10,200,300)"/>
+    </g>
+    <g fill="#d49ab0" opacity=".15">
+      <circle cx="100" cy="420" r="3"/>
+      <circle cx="280" cy="320" r="2.5"/>
+      <circle cx="330" cy="700" r="3"/>
+      <circle cx="55" cy="650" r="2"/>
+    </g>
+  </svg>
+</div>
+
+<!-- ═══════ HOME ═══════ -->
 <div id="home-screen" class="screen active">
   <div class="top-bar">
-    <div>
-      <h1>MemoCards</h1>
-      <p id="home-sub">Prêt à réviser ?</p>
-    </div>
+    <h1>Memo<em>Cards</em></h1>
+    <p id="home-sub">Prête à réviser ?</p>
   </div>
   <div class="section">
     <div class="section-title">Mes dossiers</div>
     <div id="folder-list"></div>
-    <div id="home-empty" class="empty-state" style="display:none">
-      <div class="emo">📂</div>
-      <p>Crée ton premier dossier<br>avec le bouton +</p>
-    </div>
+    <div id="home-empty" class="empty-state" style="display:none"><div class="emo">🌸</div><p>Crée ton premier dossier<br>avec le bouton +</p></div>
   </div>
 </div>
 <button class="fab" id="home-fab" onclick="openFolderModal()">+</button>
 
-<!-- ═══════════════ FOLDER SCREEN ═══════════════ -->
+<!-- ═══════ FOLDER ═══════ -->
 <div id="folder-screen" class="screen">
-  <div class="top-bar">
-    <div>
-      <h1 id="folder-title">Dossier</h1>
-      <p id="folder-sub"></p>
-    </div>
-    <button onclick="editFolder()" style="color:var(--text3);font-size:13px;padding:6px 10px;background:var(--surface);border-radius:var(--radius-sm);">⚙️</button>
+  <button class="back-top" onclick="goHome()">
+    <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+    Accueil
+  </button>
+  <div class="inner-top-bar">
+    <div><h1 id="folder-title">Dossier</h1><p id="folder-sub"></p></div>
+    <button class="edit-btn" onclick="editFolder()">⚙ Modifier</button>
   </div>
   <div class="section">
-    <div class="section-title">Decks / Listes</div>
+    <div class="section-title">Decks & listes</div>
     <div id="deck-list"></div>
-    <div id="folder-empty" class="empty-state" style="display:none">
-      <div class="emo">🗂️</div>
-      <p>Crée ton premier deck<br>avec le bouton +</p>
-    </div>
+    <div id="folder-empty" class="empty-state" style="display:none"><div class="emo">🌿</div><p>Crée ton premier deck<br>avec le bouton +</p></div>
   </div>
 </div>
 <button class="fab" id="folder-fab" style="display:none" onclick="openDeckModal()">+</button>
 
-<!-- ═══════════════ DECK SCREEN ═══════════════ -->
+<!-- ═══════ DECK ═══════ -->
 <div id="deck-screen" class="screen">
-  <div class="top-bar">
-    <div>
-      <h1 id="deck-title">Deck</h1>
-      <p id="deck-sub"></p>
-    </div>
-    <button onclick="editDeck()" style="color:var(--text3);font-size:13px;padding:6px 10px;background:var(--surface);border-radius:var(--radius-sm);">⚙️</button>
+  <button class="back-top" id="deck-back-btn" onclick="backToFolder()">
+    <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+    <span id="deck-back-label">Dossier</span>
+  </button>
+  <div class="inner-top-bar">
+    <div><h1 id="deck-title">Deck</h1><p id="deck-sub"></p></div>
+    <button class="edit-btn" onclick="editDeck()">⚙ Modifier</button>
   </div>
   <div class="section" id="deck-study-section"></div>
   <div class="section">
     <div class="section-title">Cartes</div>
     <div id="card-list"></div>
-    <div id="deck-empty" class="empty-state" style="display:none">
-      <div class="emo">🃏</div>
-      <p>Ajoute ta première carte<br>avec le bouton +</p>
-    </div>
+    <div id="deck-empty" class="empty-state" style="display:none"><div class="emo">🌷</div><p>Ajoute ta première carte<br>avec le bouton +</p></div>
   </div>
 </div>
 <button class="fab" id="deck-fab" style="display:none" onclick="openCardModal()">+</button>
 
-<!-- ═══════════════ STUDY SCREEN ═══════════════ -->
+<!-- ═══════ STUDY ═══════ -->
 <div id="study-screen" class="screen">
   <div class="study-header">
-    <button class="back-btn" onclick="backFromStudy()">←</button>
-    <div class="study-title" id="study-title"></div>
-    <div style="font-size:12px;color:var(--text3)" id="study-count"></div>
+    <button class="back-top" style="position:relative;top:0;left:0" onclick="backFromStudy()">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+      Retour
+    </button>
+    <div class="study-title" id="study-title" style="margin-left:8px"></div>
+    <div style="font-size:11px;color:var(--text3)" id="study-count"></div>
   </div>
   <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
   <div id="study-content"></div>
 </div>
 
-<!-- ═══════════════ STATS SCREEN ═══════════════ -->
+<!-- ═══════ STATS ═══════ -->
 <div id="stats-screen" class="screen">
-  <div class="top-bar"><div><h1>Statistiques</h1><p>Ta progression</p></div></div>
+  <div class="top-bar"><h1>Mes <em>stats</em></h1><p>Ta progression</p></div>
   <div class="section" id="stats-content"></div>
 </div>
 
-<!-- ═══════════════ NAV ═══════════════ -->
+<!-- NAV -->
 <nav class="nav">
   <button class="nav-btn active" id="nav-home" onclick="goHome()">
-    <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-    Accueil
+    <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Accueil
   </button>
   <button class="nav-btn" id="nav-stats" onclick="goStats()">
-    <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-    Stats
+    <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Stats
   </button>
 </nav>
 
-<!-- ═══════════════ MODALS ═══════════════ -->
+<!-- MODALS -->
+<div class="modal-bg" id="folder-modal"><div class="modal">
+  <div class="modal-handle"></div>
+  <div class="modal-title" id="folder-modal-title">Nouveau dossier</div>
+  <div class="field"><label>Nom</label><input type="text" id="fm-name" placeholder="Ex : Philo, AMC..."></div>
+  <div class="field"><label>Icône</label><div class="emoji-grid" id="emoji-grid"></div></div>
+  <div class="field"><label>Couleur</label><div class="color-dots" id="color-dots"></div></div>
+  <div class="modal-actions"><button class="btn-cancel" onclick="closeModal('folder-modal')">Annuler</button><button class="btn-save" onclick="saveFolder()">Enregistrer</button></div>
+  <button class="btn-danger" id="folder-delete-btn" style="display:none" onclick="deleteFolder()">Supprimer le dossier</button>
+</div></div>
 
-<!-- Folder modal -->
-<div class="modal-bg" id="folder-modal">
-  <div class="modal">
-    <div class="modal-handle"></div>
-    <div class="modal-title" id="folder-modal-title">Nouveau dossier</div>
-    <div class="field"><label>Nom</label><input type="text" id="fm-name" placeholder="Ex : Philo, AMC, Anglais..."></div>
-    <div class="field"><label>Icône</label>
-      <div class="emoji-grid" id="emoji-grid"></div>
-    </div>
-    <div class="field"><label>Couleur</label>
-      <div class="color-dots" id="color-dots"></div>
-    </div>
-    <div class="modal-actions">
-      <button class="btn-cancel" onclick="closeModal('folder-modal')">Annuler</button>
-      <button class="btn-save" onclick="saveFolder()">Enregistrer</button>
-    </div>
-    <button class="btn-danger" id="folder-delete-btn" style="display:none" onclick="deleteFolder()">Supprimer le dossier</button>
+<div class="modal-bg" id="deck-modal"><div class="modal">
+  <div class="modal-handle"></div>
+  <div class="modal-title" id="deck-modal-title">Nouveau deck</div>
+  <div class="tab-row"><div class="tab active" id="tab-classic" onclick="switchDeckType('classic')">Classique</div><div class="tab" id="tab-vocab" onclick="switchDeckType('vocab')">Vocabulaire</div></div>
+  <div class="field"><label>Nom</label><input type="text" id="dm-name" placeholder="Ex : Platon Lois, Voc Ch.3..."></div>
+  <div id="dm-vocab-import" style="display:none">
+    <div class="field"><label>Import rapide (mot = définition)</label><textarea id="dm-import-txt" placeholder="ambigu = qui peut avoir plusieurs sens&#10;lacunaire = incomplet, qui a des lacunes" style="min-height:110px"></textarea></div>
   </div>
-</div>
+  <div class="modal-actions"><button class="btn-cancel" onclick="closeModal('deck-modal')">Annuler</button><button class="btn-save" onclick="saveDeck()">Enregistrer</button></div>
+  <button class="btn-danger" id="deck-delete-btn" style="display:none" onclick="deleteDeck()">Supprimer le deck</button>
+</div></div>
 
-<!-- Deck modal -->
-<div class="modal-bg" id="deck-modal">
-  <div class="modal">
-    <div class="modal-handle"></div>
-    <div class="modal-title" id="deck-modal-title">Nouveau deck</div>
-    <div class="tab-row">
-      <div class="tab active" id="tab-classic" onclick="switchDeckType('classic')">Classique</div>
-      <div class="tab" id="tab-vocab" onclick="switchDeckType('vocab')">Vocabulaire</div>
-    </div>
-    <div class="field"><label>Nom</label><input type="text" id="dm-name" placeholder="Ex : Platon Lois, Vocabulaire Ch.3..."></div>
-    <div id="dm-vocab-import" style="display:none">
-      <div class="field"><label>Import rapide (mot = définition, une par ligne)</label>
-        <textarea id="dm-import-txt" placeholder="ambigu = qui peut avoir plusieurs sens&#10;lacunaire = incomplet, qui a des lacunes&#10;axiome = principe admis sans démonstration" style="min-height:120px"></textarea>
-      </div>
-    </div>
-    <div class="modal-actions">
-      <button class="btn-cancel" onclick="closeModal('deck-modal')">Annuler</button>
-      <button class="btn-save" onclick="saveDeck()">Enregistrer</button>
-    </div>
-    <button class="btn-danger" id="deck-delete-btn" style="display:none" onclick="deleteDeck()">Supprimer le deck</button>
+<div class="modal-bg" id="card-modal"><div class="modal">
+  <div class="modal-handle"></div>
+  <div class="modal-title" id="card-modal-title">Nouvelle carte</div>
+  <div id="card-fields-classic">
+    <div class="field"><label>Question</label><textarea id="cm-q" placeholder="Ex : Quelle est la thèse centrale des Lois ?"></textarea></div>
+    <div class="field"><label>Réponse</label><textarea id="cm-a" placeholder="Ex : L'amour de soi excessif est la source de toutes les fautes."></textarea></div>
+    <div class="field"><label>Explication (optionnel)</label><textarea id="cm-e" placeholder="Contexte, analyse..."></textarea></div>
   </div>
-</div>
-
-<!-- Card modal -->
-<div class="modal-bg" id="card-modal">
-  <div class="modal">
-    <div class="modal-handle"></div>
-    <div class="modal-title" id="card-modal-title">Nouvelle carte</div>
-    <div id="card-fields-classic">
-      <div class="field"><label>Question (recto)</label><textarea id="cm-q" placeholder="Ex : Quelle est la thèse centrale des Lois ?"></textarea></div>
-      <div class="field"><label>Réponse (verso)</label><textarea id="cm-a" placeholder="Ex : L'amour de soi excessif est la source de toutes les fautes."></textarea></div>
-      <div class="field"><label>Explication (optionnel)</label><textarea id="cm-e" placeholder="Contexte, analyse..."></textarea></div>
-    </div>
-    <div id="card-fields-vocab" style="display:none">
-      <div class="field"><label>Mot / Terme</label><input type="text" id="cm-word" placeholder="Ex : axiome"></div>
-      <div class="field"><label>Définition</label><textarea id="cm-def" placeholder="Ex : Principe admis sans démonstration, servant de base à un raisonnement."></textarea></div>
-      <div class="field"><label>Exemple (optionnel)</label><textarea id="cm-ex" placeholder="Ex : En géométrie, 'deux points définissent une droite' est un axiome."></textarea></div>
-    </div>
-    <div class="modal-actions">
-      <button class="btn-cancel" onclick="closeModal('card-modal')">Annuler</button>
-      <button class="btn-save" onclick="saveCard()">Enregistrer</button>
-    </div>
-    <button class="btn-danger" id="card-delete-btn" style="display:none" onclick="deleteCard()">Supprimer la carte</button>
+  <div id="card-fields-vocab" style="display:none">
+    <div class="field"><label>Mot / Terme</label><input type="text" id="cm-word" placeholder="Ex : axiome"></div>
+    <div class="field"><label>Définition</label><textarea id="cm-def" placeholder="Ex : Principe admis sans démonstration."></textarea></div>
+    <div class="field"><label>Exemple (optionnel)</label><textarea id="cm-ex" placeholder="Ex : En géométrie, deux points définissent une droite."></textarea></div>
   </div>
-</div>
+  <div class="modal-actions"><button class="btn-cancel" onclick="closeModal('card-modal')">Annuler</button><button class="btn-save" onclick="saveCard()">Enregistrer</button></div>
+  <button class="btn-danger" id="card-delete-btn" style="display:none" onclick="deleteCard()">Supprimer la carte</button>
+</div></div>
 
 <script>
-// ════════════════════════════════════════════
-//  DATA
-// ════════════════════════════════════════════
-const EMOJIS = ['📚','🧠','✏️','📝','🔬','🌍','🎭','🏛️','🔤','🧮','🎨','💡','🌿','⚗️','🗺️','📖','🏆','💬'];
-const COLORS = ['#7c6af7','#60a5fa','#4ade80','#fbbf24','#f87171','#f472b6','#34d399','#a78bfa','#fb923c','#2dd4bf'];
+const EMOJIS=['📚','🧠','✏️','📝','🔬','🌍','🎭','🏛️','🔤','🧮','🎨','💡','🌿','⚗️','🗺️','📖','🌸','🌷'];
+const COLORS=['#a98fd4','#8aab7a','#b87fa8','#c4a882','#7a9fc4','#c47a7a','#7ac4b8','#c4c47a','#a87ac4','#c47aa8'];
 
-let db = JSON.parse(localStorage.getItem('memocards') || 'null') || {
-  folders: [
-    {
-      id: 'f1', name: 'Philo', icon: '🏛️', color: '#7c6af7',
-      decks: [
-        { id: 'd1', name: 'Platon — Les Lois', type: 'classic', cards: [
-          { id:'c1', q:"Quelle est la thèse centrale du passage des Lois sur l'amour de soi ?", a:"L'amour excessif de soi est la source première de toutes les fautes humaines.", e:"Platon soutient que l'homme qui s'aime trop est aveuglé à ses propres défauts.", srs:{interval:1,ease:2.5,due:0,reps:0} },
-          { id:'c2', q:"Comment Platon définit-il l'âme dans la République ?", a:"L'âme est tripartite : raison, ardeur (thymoeides), désir.", e:"Chaque partie a sa vertu : sagesse, courage, tempérance.", srs:{interval:1,ease:2.5,due:0,reps:0} },
-          { id:'c3', q:"Qu'est-ce que la théorie des Formes (Idées) ?", a:"Les Formes sont des réalités immuables dont le monde sensible est une imitation.", e:"Allégorie de la caverne : les prisonniers voient des ombres, non les objets réels.", srs:{interval:1,ease:2.5,due:0,reps:0} },
-        ]},
-        { id: 'd2', name: 'Rousseau', type: 'classic', cards: [
-          { id:'c4', q:"Distinction amour de soi vs amour-propre ?", a:"Amour de soi : naturel et bon. Amour-propre : social, source de rivalité.", e:"L'amour-propre nous pousse à nous comparer et engendre jalousie et orgueil.", srs:{interval:1,ease:2.5,due:0,reps:0} },
-          { id:'c5', q:"Pourquoi l'isolement ralentit-il la raison selon Rousseau ?", a:"Sans interaction sociale, l'homme n'a pas besoin de langage ni de comparaison.", e:"Comme Robinson Crusoé seul — c'est la rencontre avec autrui qui stimule la raison.", srs:{interval:1,ease:2.5,due:0,reps:0} },
-        ]},
-      ]
-    },
-    {
-      id: 'f2', name: 'AMC', icon: '🔤', color: '#60a5fa',
-      decks: [
-        { id: 'd3', name: 'Vocabulaire — Exemple', type: 'vocab', cards: [
-          { id:'c6', q:"ambigu", a:"Qui peut avoir plusieurs sens ou interprétations.", e:"Ex : une phrase ambiguë peut être comprise de deux façons différentes.", srs:{interval:1,ease:2.5,due:0,reps:0} },
-          { id:'c7', q:"lacunaire", a:"Incomplet, qui présente des lacunes, des manques.", e:"Ex : un dossier lacunaire ne contient pas tous les documents nécessaires.", srs:{interval:1,ease:2.5,due:0,reps:0} },
-          { id:'c8', q:"axiome", a:"Principe admis sans démonstration, servant de base à un raisonnement.", e:"Ex : en géométrie, 'deux points définissent une droite' est un axiome.", srs:{interval:1,ease:2.5,due:0,reps:0} },
-        ]}
-      ]
-    }
-  ],
-  srs: {}
-};
+let db=JSON.parse(localStorage.getItem('memocards_v3')||'null')||{folders:[
+  {id:'f1',name:'Philo',icon:'🏛️',color:'#a98fd4',decks:[
+    {id:'d1',name:'Platon — Les Lois',type:'classic',cards:[
+      {id:'c1',q:"Quelle est la thèse centrale du passage des Lois sur l'amour de soi ?",a:"L'amour excessif de soi est la source première de toutes les fautes humaines.",e:"Platon soutient que l'homme qui s'aime trop est aveuglé à ses propres défauts.",srs:{interval:1,ease:2.5,due:0,reps:0}},
+      {id:'c2',q:"Comment Platon définit-il l'âme dans la République ?",a:"L'âme est tripartite : raison, ardeur (thymoeides), désir.",e:"Chaque partie a sa vertu : sagesse, courage, tempérance.",srs:{interval:1,ease:2.5,due:0,reps:0}},
+      {id:'c3',q:"Qu'est-ce que la théorie des Formes (Idées) ?",a:"Les Formes sont des réalités immuables dont le monde sensible est une imitation.",e:"Allégorie de la caverne : les prisonniers voient des ombres, non les objets réels.",srs:{interval:1,ease:2.5,due:0,reps:0}},
+    ]},
+    {id:'d2',name:'Rousseau',type:'classic',cards:[
+      {id:'c4',q:"Distinction amour de soi vs amour-propre ?",a:"Amour de soi : naturel et bon. Amour-propre : social, source de rivalité.",e:"L'amour-propre nous pousse à nous comparer et engendre jalousie.",srs:{interval:1,ease:2.5,due:0,reps:0}},
+      {id:'c5',q:"Pourquoi l'isolement ralentit-il la raison selon Rousseau ?",a:"Sans interaction sociale, l'homme n'a pas besoin de langage ni de comparaison.",e:"C'est la rencontre avec autrui qui stimule la raison.",srs:{interval:1,ease:2.5,due:0,reps:0}},
+    ]},
+  ]},
+  {id:'f2',name:'AMC',icon:'🔤',color:'#8aab7a',decks:[
+    {id:'d3',name:'Vocabulaire — Exemple',type:'vocab',cards:[
+      {id:'c6',q:"ambigu",a:"Qui peut avoir plusieurs sens ou interprétations.",e:"Ex : une phrase ambiguë peut être comprise de deux façons.",srs:{interval:1,ease:2.5,due:0,reps:0}},
+      {id:'c7',q:"lacunaire",a:"Incomplet, qui présente des lacunes, des manques.",e:"Ex : un dossier lacunaire ne contient pas tous les documents.",srs:{interval:1,ease:2.5,due:0,reps:0}},
+      {id:'c8',q:"axiome",a:"Principe admis sans démonstration, servant de base à un raisonnement.",e:"Ex : en géométrie, deux points définissent une droite.",srs:{interval:1,ease:2.5,due:0,reps:0}},
+    ]}
+  ]}
+]};
 
-let curFolder = null;
-let curDeck = null;
-let editingFolderId = null;
-let editingDeckId = null;
-let editingCardId = null;
-let selectedEmoji = '📚';
-let selectedColor = COLORS[0];
-let deckType = 'classic';
-let studyQueue = [];
-let studyIdx = 0;
-let studyRevealed = false;
-let studyDone = 0;
-let studyCorrect = 0;
+let curFolder=null,curDeck=null,editingFolderId=null,editingDeckId=null,editingCardId=null;
+let selectedEmoji='🌸',selectedColor=COLORS[0],deckType='classic';
+let studyQueue=[],studyIdx=0,studyRevealed=false,studyDone=0,studyCorrect=0;
 
-function save() { localStorage.setItem('memocards', JSON.stringify(db)); }
+function save(){localStorage.setItem('memocards_v3',JSON.stringify(db));}
 
-// ════════════════════════════════════════════
-//  NAVIGATION
-// ════════════════════════════════════════════
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  document.getElementById('home-fab').style.display = 'none';
-  document.getElementById('folder-fab').style.display = 'none';
-  document.getElementById('deck-fab').style.display = 'none';
-  if (id === 'home-screen') document.getElementById('home-fab').style.display = 'flex';
-  if (id === 'folder-screen') document.getElementById('folder-fab').style.display = 'flex';
-  if (id === 'deck-screen') document.getElementById('deck-fab').style.display = 'flex';
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  if (id === 'home-screen' || id === 'folder-screen' || id === 'deck-screen') document.getElementById('nav-home').classList.add('active');
-  if (id === 'stats-screen') document.getElementById('nav-stats').classList.add('active');
+  ['home-fab','folder-fab','deck-fab'].forEach(f=>document.getElementById(f).style.display='none');
+  if(id==='home-screen') document.getElementById('home-fab').style.display='flex';
+  if(id==='folder-screen') document.getElementById('folder-fab').style.display='flex';
+  if(id==='deck-screen') document.getElementById('deck-fab').style.display='flex';
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  if(['home-screen','folder-screen','deck-screen','study-screen'].includes(id)) document.getElementById('nav-home').classList.add('active');
+  if(id==='stats-screen') document.getElementById('nav-stats').classList.add('active');
   window.scrollTo(0,0);
 }
 
-function goHome() { renderHome(); showScreen('home-screen'); }
-function goStats() { renderStats(); showScreen('stats-screen'); }
+function goHome(){renderHome();showScreen('home-screen');}
+function goStats(){renderStats();showScreen('stats-screen');}
+function openFolder(id){curFolder=db.folders.find(f=>f.id===id);renderFolder();showScreen('folder-screen');}
+function openDeck(id){curDeck=curFolder.decks.find(d=>d.id===id);document.getElementById('deck-back-label').textContent=curFolder.name;renderDeck();showScreen('deck-screen');}
+function backToFolder(){renderFolder();showScreen('folder-screen');}
+function backFromStudy(){renderDeck();showScreen('deck-screen');}
 
-function openFolder(folderId) {
-  curFolder = db.folders.find(f => f.id === folderId);
-  renderFolder();
-  showScreen('folder-screen');
-}
-
-function openDeck(deckId) {
-  curDeck = curFolder.decks.find(d => d.id === deckId);
-  renderDeck();
-  showScreen('deck-screen');
-}
-
-function backFromStudy() {
-  renderDeck();
-  showScreen('deck-screen');
-}
-
-// ════════════════════════════════════════════
-//  RENDER HOME
-// ════════════════════════════════════════════
-function renderHome() {
-  const list = document.getElementById('folder-list');
-  const empty = document.getElementById('home-empty');
-  const now = Date.now();
-  if (db.folders.length === 0) { list.innerHTML = ''; empty.style.display = 'block'; return; }
-  empty.style.display = 'none';
-  list.innerHTML = db.folders.map(f => {
-    const total = f.decks.reduce((s,d) => s + d.cards.length, 0);
-    const due = f.decks.reduce((s,d) => s + d.cards.filter(c => c.srs.due <= now).length, 0);
-    return `<div class="folder-card" onclick="openFolder('${f.id}')">
-      <div class="folder-icon" style="background:${f.color}22">${f.icon}</div>
-      <div class="folder-info">
-        <div class="folder-name">${f.name}</div>
-        <div class="folder-meta">${f.decks.length} deck${f.decks.length>1?'s':''} · ${total} carte${total>1?'s':''}</div>
-      </div>
-      ${due > 0 ? `<span class="chip chip-due">${due} à revoir</span>` : '<span class="chip chip-ok">✓</span>'}
-      <span class="folder-arrow">›</span>
+function renderHome(){
+  const now=Date.now(),list=document.getElementById('folder-list'),empty=document.getElementById('home-empty');
+  if(db.folders.length===0){list.innerHTML='';empty.style.display='block';return;}
+  empty.style.display='none';
+  list.innerHTML=db.folders.map(f=>{
+    const total=f.decks.reduce((s,d)=>s+d.cards.length,0);
+    const due=f.decks.reduce((s,d)=>s+d.cards.filter(c=>c.srs.due<=now).length,0);
+    return `<div class="folder-card" style="--fc:${f.color}" onclick="openFolder('${f.id}')">
+      <div class="folder-icon" style="background:${f.color}20">${f.icon}</div>
+      <div class="folder-info"><div class="folder-name">${f.name}</div><div class="folder-meta">${f.decks.length} deck${f.decks.length>1?'s':''} · ${total} carte${total>1?'s':''}</div></div>
+      ${due>0?`<span class="chip chip-due">${due} à revoir</span>`:'<span class="chip chip-ok">✓ À jour</span>'}
+      <span style="color:var(--text3);margin-left:4px">›</span>
     </div>`;
   }).join('');
-  const total = db.folders.reduce((s,f) => s + f.decks.reduce((ss,d) => ss+d.cards.length,0), 0);
-  document.getElementById('home-sub').textContent = `${total} carte${total>1?'s':''} au total`;
+  const total=db.folders.reduce((s,f)=>s+f.decks.reduce((ss,d)=>ss+d.cards.length,0),0);
+  document.getElementById('home-sub').textContent=`${total} carte${total>1?'s':''} au total`;
 }
 
-// ════════════════════════════════════════════
-//  RENDER FOLDER
-// ════════════════════════════════════════════
-function renderFolder() {
-  const f = curFolder;
-  document.getElementById('folder-title').textContent = f.icon + ' ' + f.name;
-  const now = Date.now();
-  const total = f.decks.reduce((s,d) => s + d.cards.length, 0);
-  document.getElementById('folder-sub').textContent = `${f.decks.length} deck${f.decks.length>1?'s':''} · ${total} cartes`;
-  const list = document.getElementById('deck-list');
-  const empty = document.getElementById('folder-empty');
-  if (f.decks.length === 0) { list.innerHTML = ''; empty.style.display = 'block'; return; }
-  empty.style.display = 'none';
-  list.innerHTML = f.decks.map(d => {
-    const due = d.cards.filter(c => c.srs.due <= now).length;
-    const typeLabel = d.type === 'vocab' ? '🔤 Vocabulaire' : '📖 Classique';
+function renderFolder(){
+  const f=curFolder;
+  document.getElementById('folder-title').textContent=f.icon+' '+f.name;
+  const total=f.decks.reduce((s,d)=>s+d.cards.length,0);
+  document.getElementById('folder-sub').textContent=`${f.decks.length} deck${f.decks.length>1?'s':''} · ${total} cartes`;
+  const list=document.getElementById('deck-list'),empty=document.getElementById('folder-empty'),now=Date.now();
+  if(f.decks.length===0){list.innerHTML='';empty.style.display='block';return;}
+  empty.style.display='none';
+  list.innerHTML=f.decks.map(d=>{
+    const due=d.cards.filter(c=>c.srs.due<=now).length;
     return `<div class="deck-card" onclick="openDeck('${d.id}')">
       <div class="deck-dot" style="background:${f.color}"></div>
-      <div class="deck-info">
-        <div class="deck-name">${d.name}</div>
-        <div class="deck-meta">${typeLabel} · ${d.cards.length} carte${d.cards.length>1?'s':''}</div>
-      </div>
-      ${due > 0 ? `<span class="deck-due">${due} dûes</span>` : ''}
+      <div class="deck-info"><div class="deck-name">${d.name}</div><div class="deck-meta">${d.type==='vocab'?'🔤 Vocabulaire':'📖 Classique'} · ${d.cards.length} carte${d.cards.length>1?'s':''}</div></div>
+      ${due>0?`<span class="deck-due">${due} dûes</span>`:''}
       <span style="color:var(--text3)">›</span>
     </div>`;
   }).join('');
 }
 
-// ════════════════════════════════════════════
-//  RENDER DECK
-// ════════════════════════════════════════════
-function renderDeck() {
-  const d = curDeck;
-  document.getElementById('deck-title').textContent = d.name;
-  const now = Date.now();
-  const due = d.cards.filter(c => c.srs.due <= now).length;
-  document.getElementById('deck-sub').textContent = `${d.cards.length} carte${d.cards.length>1?'s':''} · ${due} à réviser`;
-  const studySec = document.getElementById('deck-study-section');
-  studySec.innerHTML = due > 0
-    ? `<button class="study-start-btn" onclick="startStudy()">▶ Réviser maintenant (${due} cartes)</button>`
-    : `<button class="study-start-btn" onclick="startStudy(true)" style="background:var(--surface2);color:var(--text2)">▶ Tout réviser (${d.cards.length} cartes)</button>`;
-  const list = document.getElementById('card-list');
-  const empty = document.getElementById('deck-empty');
-  if (d.cards.length === 0) { list.innerHTML = ''; empty.style.display = 'block'; return; }
-  empty.style.display = 'none';
-  list.innerHTML = d.cards.map(c => {
-    const isVocab = d.type === 'vocab';
-    return `<div class="deck-card" onclick="openCardModal('${c.id}')">
-      <div class="deck-dot" style="background:${curFolder.color}"></div>
-      <div class="deck-info">
-        <div class="deck-name" style="font-size:14px">${isVocab ? c.q : c.q.substring(0,60)+(c.q.length>60?'…':'')}</div>
-        <div class="deck-meta">${c.srs.reps === 0 ? 'Nouvelle' : 'Intervalle : '+fmtInterval(c.srs.interval)}</div>
-      </div>
-    </div>`;
-  }).join('');
+function renderDeck(){
+  const d=curDeck,now=Date.now();
+  document.getElementById('deck-title').textContent=d.name;
+  const due=d.cards.filter(c=>c.srs.due<=now).length;
+  document.getElementById('deck-sub').textContent=`${d.cards.length} carte${d.cards.length>1?'s':''} · ${due} à réviser`;
+  document.getElementById('deck-study-section').innerHTML=due>0
+    ?`<button class="study-start-btn" onclick="startStudy()">✿ Réviser maintenant (${due} cartes)</button>`
+    :`<button class="study-start-btn" onclick="startStudy(true)" style="background:linear-gradient(135deg,var(--sage2),var(--sage))">✿ Tout réviser (${d.cards.length} cartes)</button>`;
+  const list=document.getElementById('card-list'),empty=document.getElementById('deck-empty');
+  if(d.cards.length===0){list.innerHTML='';empty.style.display='block';return;}
+  empty.style.display='none';
+  list.innerHTML=d.cards.map(c=>`<div class="deck-card" onclick="openCardModal('${c.id}')">
+    <div class="deck-dot" style="background:${curFolder.color}"></div>
+    <div class="deck-info"><div class="deck-name" style="font-size:13px">${c.q.substring(0,55)+(c.q.length>55?'…':'')}</div><div class="deck-meta">${c.srs.reps===0?'🌱 Nouvelle':'🔁 '+fmtInterval(c.srs.interval)}</div></div>
+  </div>`).join('');
 }
 
-// ════════════════════════════════════════════
-//  STUDY
-// ════════════════════════════════════════════
-function startStudy(all = false) {
-  const now = Date.now();
-  studyQueue = all
-    ? [...curDeck.cards]
-    : curDeck.cards.filter(c => c.srs.due <= now);
-  studyQueue.sort((a,b) => a.srs.due - b.srs.due);
-  studyIdx = 0;
-  studyDone = 0;
-  studyCorrect = 0;
-  studyRevealed = false;
-  if (studyQueue.length === 0) return;
-  document.getElementById('study-title').textContent = curDeck.name;
-  showStudyCard();
-  showScreen('study-screen');
+function startStudy(all=false){
+  const now=Date.now();
+  studyQueue=all?[...curDeck.cards]:curDeck.cards.filter(c=>c.srs.due<=now);
+  studyQueue.sort((a,b)=>a.srs.due-b.srs.due);
+  studyIdx=0;studyDone=0;studyCorrect=0;studyRevealed=false;
+  if(studyQueue.length===0) return;
+  document.getElementById('study-title').textContent=curDeck.name;
+  showStudyCard();showScreen('study-screen');
 }
 
-function showStudyCard() {
-  const content = document.getElementById('study-content');
-  if (studyIdx >= studyQueue.length) {
-    showDoneScreen();
-    return;
-  }
-  const c = studyQueue[studyIdx];
-  const isVocab = curDeck.type === 'vocab';
-  const pct = Math.round((studyIdx / studyQueue.length) * 100);
-  document.getElementById('progress-fill').style.width = pct + '%';
-  document.getElementById('study-count').textContent = `${studyIdx+1}/${studyQueue.length}`;
-  studyRevealed = false;
-  content.innerHTML = `
-    <div class="card-wrap">
-      <div class="flash-card" onclick="revealStudyCard()">
-        <span class="card-type-badge">${isVocab ? 'Vocabulaire' : 'Question'}</span>
-        <span class="card-counter">${c.srs.reps === 0 ? '🆕 Nouvelle' : '🔁 Révision'}</span>
-        <div class="card-q">${c.q}</div>
-        <div id="ans-reveal" style="display:none;width:100%">
-          <div class="card-divider"></div>
-          <div class="card-a">${c.a}</div>
-          ${c.e ? `<div class="card-explain">${c.e}</div>` : ''}
-        </div>
+function showStudyCard(){
+  const content=document.getElementById('study-content');
+  if(studyIdx>=studyQueue.length){showDoneScreen();return;}
+  const c=studyQueue[studyIdx],s=c.srs;
+  document.getElementById('progress-fill').style.width=Math.round(studyIdx/studyQueue.length*100)+'%';
+  document.getElementById('study-count').textContent=`${studyIdx+1}/${studyQueue.length}`;
+  studyRevealed=false;
+  const labels=[fmtInterval(0),fmtInterval(Math.max(1,Math.round(s.interval*1.2))),fmtInterval(Math.round(s.interval*s.ease)),fmtInterval(Math.round(s.interval*s.ease*1.3))];
+  content.innerHTML=`
+    <div class="card-wrap"><div class="flash-card" onclick="revealStudyCard()">
+      <span class="card-type-badge">${curDeck.type==='vocab'?'Vocabulaire':'Question'}</span>
+      <span class="card-counter">${c.srs.reps===0?'🌱 Nouvelle':'🔁 Révision'}</span>
+      <div class="card-q">${c.q}</div>
+      <div id="ans-reveal" style="display:none;width:100%">
+        <div class="card-divider"></div>
+        <div class="card-a">${c.a}</div>
+        ${c.e?`<div class="card-explain">${c.e}</div>`:''}
       </div>
-    </div>
-    <div class="flip-zone" id="flip-zone">
-      <button class="flip-btn" onclick="revealStudyCard()">Voir la réponse</button>
-    </div>
+    </div></div>
+    <div class="flip-zone" id="flip-zone"><button class="flip-btn" onclick="revealStudyCard()">Voir la réponse ✿</button></div>
     <div class="rate-btns" id="rate-btns" style="display:none">
-      <button class="rate-btn rate-again" onclick="rateCard(0)">↩ Revoir<span class="int" id="i0"></span></button>
-      <button class="rate-btn rate-hard" onclick="rateCard(1)">😓 Dur<span class="int" id="i1"></span></button>
-      <button class="rate-btn rate-good" onclick="rateCard(2)">✓ Bien<span class="int" id="i2"></span></button>
-      <button class="rate-btn rate-easy" onclick="rateCard(3)">⚡ Facile<span class="int" id="i3"></span></button>
+      <button class="rate-btn rate-again" onclick="rateCard(0)">↩ Revoir<span class="int">${labels[0]}</span></button>
+      <button class="rate-btn rate-hard" onclick="rateCard(1)">😓 Dur<span class="int">${labels[1]}</span></button>
+      <button class="rate-btn rate-good" onclick="rateCard(2)">✓ Bien<span class="int">${labels[2]}</span></button>
+      <button class="rate-btn rate-easy" onclick="rateCard(3)">⚡ Facile<span class="int">${labels[3]}</span></button>
     </div>`;
-  updateIntervalLabels(c);
 }
 
-function revealStudyCard() {
-  if (studyRevealed) return;
-  studyRevealed = true;
-  document.getElementById('ans-reveal').style.display = 'block';
-  document.getElementById('flip-zone').style.display = 'none';
-  document.getElementById('rate-btns').style.display = 'grid';
+function revealStudyCard(){
+  if(studyRevealed) return;studyRevealed=true;
+  document.getElementById('ans-reveal').style.display='block';
+  document.getElementById('flip-zone').style.display='none';
+  document.getElementById('rate-btns').style.display='grid';
 }
 
-function updateIntervalLabels(c) {
-  const s = c.srs;
-  const labels = [
-    fmtInterval(0),
-    fmtInterval(Math.max(1, Math.round(s.interval * 1.2))),
-    fmtInterval(Math.round(s.interval * s.ease)),
-    fmtInterval(Math.round(s.interval * s.ease * 1.3))
-  ];
-  for (let i = 0; i < 4; i++) {
-    const el = document.getElementById('i'+i);
-    if (el) el.textContent = labels[i];
-  }
+function rateCard(grade){
+  const c=studyQueue[studyIdx],s=c.srs;s.reps++;
+  if(grade===0){s.interval=1;s.due=Date.now()+60000;}
+  else if(grade===1){s.interval=Math.max(1,Math.round(s.interval*1.2));s.ease=Math.max(1.3,s.ease-.15);s.due=Date.now()+s.interval*86400000;}
+  else if(grade===2){s.interval=Math.round(s.interval*s.ease);s.due=Date.now()+s.interval*86400000;}
+  else{s.interval=Math.round(s.interval*s.ease*1.3);s.ease=Math.min(4,s.ease+.1);s.due=Date.now()+s.interval*86400000;}
+  if(grade>0) studyCorrect++;studyDone++;
+  if(grade===0) studyQueue.push(c);
+  studyIdx++;save();showStudyCard();
 }
 
-function rateCard(grade) {
-  const c = studyQueue[studyIdx];
-  const s = c.srs;
-  s.reps++;
-  if (grade === 0) { s.interval = 1; s.due = Date.now() + 60000; }
-  else if (grade === 1) { s.interval = Math.max(1, Math.round(s.interval * 1.2)); s.ease = Math.max(1.3, s.ease - 0.15); s.due = Date.now() + s.interval * 86400000; }
-  else if (grade === 2) { s.interval = Math.round(s.interval * s.ease); s.due = Date.now() + s.interval * 86400000; }
-  else { s.interval = Math.round(s.interval * s.ease * 1.3); s.ease = Math.min(4, s.ease + 0.1); s.due = Date.now() + s.interval * 86400000; }
-  if (grade > 0) studyCorrect++;
-  studyDone++;
-  if (grade === 0) { studyQueue.push(c); }
-  studyIdx++;
-  save();
-  showStudyCard();
-}
-
-function showDoneScreen() {
-  document.getElementById('progress-fill').style.width = '100%';
-  document.getElementById('study-count').textContent = '✓ Terminé';
-  const pct = studyDone > 0 ? Math.round((studyCorrect / studyDone) * 100) : 0;
-  document.getElementById('study-content').innerHTML = `
+function showDoneScreen(){
+  document.getElementById('progress-fill').style.width='100%';
+  document.getElementById('study-count').textContent='✓';
+  const pct=studyDone>0?Math.round(studyCorrect/studyDone*100):0;
+  document.getElementById('study-content').innerHTML=`
     <div class="done-screen">
-      <div class="done-emoji">${pct >= 80 ? '🏆' : pct >= 50 ? '💪' : '📚'}</div>
-      <div class="done-title">${pct >= 80 ? 'Excellent !' : pct >= 50 ? 'Bien joué !' : 'Continue !'}</div>
-      <div class="done-sub">Session terminée</div>
+      <div class="done-emoji">${pct>=80?'🌸':pct>=50?'🌿':'📚'}</div>
+      <div class="done-title">${pct>=80?'Excellent !':pct>=50?'Bien joué !':'Continue !'}</div>
+      <div class="done-sub">Session terminée · ${pct}% de réussite</div>
       <div class="done-stats">
         <div class="done-stat"><div class="done-stat-n">${studyDone}</div><div class="done-stat-l">Cartes vues</div></div>
         <div class="done-stat"><div class="done-stat-n">${pct}%</div><div class="done-stat-l">Réussite</div></div>
@@ -608,215 +605,103 @@ function showDoneScreen() {
     </div>`;
 }
 
-function fmtInterval(days) {
-  if (days === 0) return '< 1min';
-  if (days === 1) return '1j';
-  if (days < 7) return days+'j';
-  if (days < 30) return Math.round(days/7)+'sem';
-  return Math.round(days/30)+'mois';
-}
+function fmtInterval(d){if(d===0)return '<1min';if(d===1)return '1j';if(d<7)return d+'j';if(d<30)return Math.round(d/7)+'sem';return Math.round(d/30)+'mois';}
 
-// ════════════════════════════════════════════
-//  STATS
-// ════════════════════════════════════════════
-function renderStats() {
-  const now = Date.now();
-  let totalCards = 0, totalDue = 0, totalLearned = 0;
-  db.folders.forEach(f => f.decks.forEach(d => {
-    totalCards += d.cards.length;
-    d.cards.forEach(c => {
-      if (c.srs.due <= now) totalDue++;
-      if (c.srs.reps > 0) totalLearned++;
-    });
-  }));
-  const content = document.getElementById('stats-content');
-  content.innerHTML = `
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px">
-      <div class="done-stat"><div class="done-stat-n" style="color:var(--accent2)">${totalCards}</div><div class="done-stat-l">Total cartes</div></div>
-      <div class="done-stat"><div class="done-stat-n" style="color:var(--green)">${totalLearned}</div><div class="done-stat-l">Apprises</div></div>
-      <div class="done-stat"><div class="done-stat-n" style="color:var(--red)">${totalDue}</div><div class="done-stat-l">À réviser</div></div>
-      <div class="done-stat"><div class="done-stat-n" style="color:var(--amber)">${db.folders.length}</div><div class="done-stat-l">Dossiers</div></div>
+function renderStats(){
+  const now=Date.now();let total=0,due=0,learned=0;
+  db.folders.forEach(f=>f.decks.forEach(d=>{total+=d.cards.length;d.cards.forEach(c=>{if(c.srs.due<=now)due++;if(c.srs.reps>0)learned++;});}));
+  document.getElementById('stats-content').innerHTML=`
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-n" style="color:var(--lavender)">${total}</div><div class="stat-l">Total</div></div>
+      <div class="stat-card"><div class="stat-n" style="color:var(--sage)">${learned}</div><div class="stat-l">Apprises</div></div>
+      <div class="stat-card"><div class="stat-n" style="color:var(--rose)">${due}</div><div class="stat-l">À réviser</div></div>
+      <div class="stat-card"><div class="stat-n" style="color:var(--lavender2)">${db.folders.length}</div><div class="stat-l">Dossiers</div></div>
     </div>
-    <div class="section-title" style="margin-bottom:10px">Par dossier</div>
-    ${db.folders.map(f => {
-      const t = f.decks.reduce((s,d)=>s+d.cards.length,0);
-      const due = f.decks.reduce((s,d)=>s+d.cards.filter(c=>c.srs.due<=now).length,0);
-      const learned = f.decks.reduce((s,d)=>s+d.cards.filter(c=>c.srs.reps>0).length,0);
-      const pct = t > 0 ? Math.round(learned/t*100) : 0;
-      return `<div class="folder-card" style="cursor:default;margin-bottom:10px">
-        <div class="folder-icon" style="background:${f.color}22">${f.icon}</div>
+    <div class="section-title" style="margin-bottom:12px">Par dossier</div>
+    ${db.folders.map(f=>{
+      const t=f.decks.reduce((s,d)=>s+d.cards.length,0);
+      const du=f.decks.reduce((s,d)=>s+d.cards.filter(c=>c.srs.due<=now).length,0);
+      const le=f.decks.reduce((s,d)=>s+d.cards.filter(c=>c.srs.reps>0).length,0);
+      const pct=t>0?Math.round(le/t*100):0;
+      return `<div class="folder-card" style="--fc:${f.color};cursor:default;margin-bottom:12px">
+        <div class="folder-icon" style="background:${f.color}20">${f.icon}</div>
         <div class="folder-info">
           <div class="folder-name">${f.name}</div>
-          <div style="margin-top:6px;background:var(--surface2);border-radius:4px;height:4px;overflow:hidden">
-            <div style="height:100%;width:${pct}%;background:${f.color};border-radius:4px"></div>
-          </div>
-          <div class="folder-meta" style="margin-top:4px">${learned}/${t} apprises · ${due} à revoir</div>
+          <div style="margin-top:8px;background:var(--bg3);border-radius:4px;height:4px;overflow:hidden"><div style="height:100%;width:${pct}%;background:${f.color};border-radius:4px;transition:width .5s"></div></div>
+          <div class="folder-meta" style="margin-top:4px">${le}/${t} apprises · ${du} à revoir</div>
         </div>
       </div>`;
     }).join('')}`;
 }
 
-// ════════════════════════════════════════════
-//  MODALS — FOLDER
-// ════════════════════════════════════════════
-function openFolderModal(folderId) {
-  editingFolderId = folderId || null;
-  const modal = document.getElementById('folder-modal');
-  const f = folderId ? db.folders.find(x => x.id === folderId) : null;
-  document.getElementById('folder-modal-title').textContent = folderId ? 'Modifier le dossier' : 'Nouveau dossier';
-  document.getElementById('fm-name').value = f ? f.name : '';
-  document.getElementById('folder-delete-btn').style.display = folderId ? 'block' : 'none';
-  selectedEmoji = f ? f.icon : '📚';
-  selectedColor = f ? f.color : COLORS[0];
-  renderEmojiGrid();
-  renderColorDots();
-  modal.classList.add('open');
+function openFolderModal(id){
+  editingFolderId=id||null;const f=id?db.folders.find(x=>x.id===id):null;
+  document.getElementById('folder-modal-title').textContent=id?'Modifier le dossier':'Nouveau dossier';
+  document.getElementById('fm-name').value=f?f.name:'';
+  document.getElementById('folder-delete-btn').style.display=id?'block':'none';
+  selectedEmoji=f?f.icon:'🌸';selectedColor=f?f.color:COLORS[0];
+  renderEmojiGrid();renderColorDots();document.getElementById('folder-modal').classList.add('open');
 }
-
-function editFolder() { openFolderModal(curFolder.id); }
-
-function renderEmojiGrid() {
-  document.getElementById('emoji-grid').innerHTML = EMOJIS.map(e =>
-    `<div class="emoji-opt${e===selectedEmoji?' sel':''}" onclick="selEmoji('${e}')">${e}</div>`
-  ).join('');
+function editFolder(){openFolderModal(curFolder.id);}
+function renderEmojiGrid(){document.getElementById('emoji-grid').innerHTML=EMOJIS.map(e=>`<div class="emoji-opt${e===selectedEmoji?' sel':''}" onclick="selEmoji('${e}')">${e}</div>`).join('');}
+function renderColorDots(){document.getElementById('color-dots').innerHTML=COLORS.map(c=>`<div class="color-dot${c===selectedColor?' sel':''}" style="background:${c}" onclick="selColor('${c}')"></div>`).join('');}
+function selEmoji(e){selectedEmoji=e;renderEmojiGrid();}
+function selColor(c){selectedColor=c;renderColorDots();}
+function saveFolder(){
+  const name=document.getElementById('fm-name').value.trim();if(!name)return;
+  if(editingFolderId){const f=db.folders.find(x=>x.id===editingFolderId);f.name=name;f.icon=selectedEmoji;f.color=selectedColor;if(curFolder){curFolder=f;renderFolder();}}
+  else db.folders.push({id:'f'+Date.now(),name,icon:selectedEmoji,color:selectedColor,decks:[]});
+  save();closeModal('folder-modal');renderHome();
 }
+function deleteFolder(){if(!confirm('Supprimer ce dossier ?'))return;db.folders=db.folders.filter(f=>f.id!==editingFolderId);save();closeModal('folder-modal');goHome();}
 
-function renderColorDots() {
-  document.getElementById('color-dots').innerHTML = COLORS.map(c =>
-    `<div class="color-dot${c===selectedColor?' sel':''}" style="background:${c}" onclick="selColor('${c}')"></div>`
-  ).join('');
+function openDeckModal(id){
+  editingDeckId=id||null;const d=id?curFolder.decks.find(x=>x.id===id):null;
+  document.getElementById('deck-modal-title').textContent=id?'Modifier le deck':'Nouveau deck';
+  document.getElementById('dm-name').value=d?d.name:'';
+  document.getElementById('deck-delete-btn').style.display=id?'block':'none';
+  deckType=d?d.type:'classic';switchDeckType(deckType);
+  document.getElementById('dm-import-txt').value='';document.getElementById('deck-modal').classList.add('open');
 }
-
-function selEmoji(e) { selectedEmoji = e; renderEmojiGrid(); }
-function selColor(c) { selectedColor = c; renderColorDots(); }
-
-function saveFolder() {
-  const name = document.getElementById('fm-name').value.trim();
-  if (!name) return;
-  if (editingFolderId) {
-    const f = db.folders.find(x => x.id === editingFolderId);
-    f.name = name; f.icon = selectedEmoji; f.color = selectedColor;
-    if (curFolder) { curFolder = f; renderFolder(); }
-  } else {
-    const f = { id: 'f'+Date.now(), name, icon: selectedEmoji, color: selectedColor, decks: [] };
-    db.folders.push(f);
-  }
-  save(); closeModal('folder-modal'); renderHome();
-}
-
-function deleteFolder() {
-  if (!confirm('Supprimer ce dossier et toutes ses cartes ?')) return;
-  db.folders = db.folders.filter(f => f.id !== editingFolderId);
-  save(); closeModal('folder-modal'); goHome();
-}
-
-// ════════════════════════════════════════════
-//  MODALS — DECK
-// ════════════════════════════════════════════
-function openDeckModal(deckId) {
-  editingDeckId = deckId || null;
-  const d = deckId ? curFolder.decks.find(x => x.id === deckId) : null;
-  document.getElementById('deck-modal-title').textContent = deckId ? 'Modifier le deck' : 'Nouveau deck';
-  document.getElementById('dm-name').value = d ? d.name : '';
-  document.getElementById('deck-delete-btn').style.display = deckId ? 'block' : 'none';
-  deckType = d ? d.type : 'classic';
-  switchDeckType(deckType, true);
-  document.getElementById('dm-import-txt').value = '';
-  document.getElementById('deck-modal').classList.add('open');
-}
-
-function editDeck() { openDeckModal(curDeck.id); }
-
-function switchDeckType(type, silent) {
-  deckType = type;
-  document.getElementById('tab-classic').classList.toggle('active', type === 'classic');
-  document.getElementById('tab-vocab').classList.toggle('active', type === 'vocab');
-  document.getElementById('dm-vocab-import').style.display = type === 'vocab' ? 'block' : 'none';
-}
-
-function saveDeck() {
-  const name = document.getElementById('dm-name').value.trim();
-  if (!name) return;
-  if (editingDeckId) {
-    const d = curFolder.decks.find(x => x.id === editingDeckId);
-    d.name = name; d.type = deckType;
-    if (curDeck) { curDeck = d; renderDeck(); }
-  } else {
-    const d = { id: 'd'+Date.now(), name, type: deckType, cards: [] };
-    if (deckType === 'vocab') {
-      const txt = document.getElementById('dm-import-txt').value.trim();
-      if (txt) {
-        txt.split('\n').forEach(line => {
-          const sep = line.indexOf('=');
-          if (sep === -1) return;
-          const word = line.substring(0, sep).trim();
-          const def = line.substring(sep+1).trim();
-          if (word && def) d.cards.push({ id:'c'+Date.now()+Math.random(), q:word, a:def, e:'', srs:{interval:1,ease:2.5,due:0,reps:0} });
-        });
-      }
-    }
+function editDeck(){openDeckModal(curDeck.id);}
+function switchDeckType(type){deckType=type;document.getElementById('tab-classic').classList.toggle('active',type==='classic');document.getElementById('tab-vocab').classList.toggle('active',type==='vocab');document.getElementById('dm-vocab-import').style.display=type==='vocab'?'block':'none';}
+function saveDeck(){
+  const name=document.getElementById('dm-name').value.trim();if(!name)return;
+  if(editingDeckId){const d=curFolder.decks.find(x=>x.id===editingDeckId);d.name=name;d.type=deckType;if(curDeck){curDeck=d;renderDeck();}}
+  else{
+    const d={id:'d'+Date.now(),name,type:deckType,cards:[]};
+    if(deckType==='vocab'){const txt=document.getElementById('dm-import-txt').value.trim();if(txt)txt.split('\n').forEach(line=>{const sep=line.indexOf('=');if(sep===-1)return;const w=line.substring(0,sep).trim(),def=line.substring(sep+1).trim();if(w&&def)d.cards.push({id:'c'+Date.now()+Math.random(),q:w,a:def,e:'',srs:{interval:1,ease:2.5,due:0,reps:0}});});}
     curFolder.decks.push(d);
   }
-  save(); closeModal('deck-modal'); renderFolder();
+  save();closeModal('deck-modal');renderFolder();
 }
+function deleteDeck(){if(!confirm('Supprimer ce deck ?'))return;curFolder.decks=curFolder.decks.filter(d=>d.id!==editingDeckId);save();closeModal('deck-modal');renderFolder();showScreen('folder-screen');}
 
-function deleteDeck() {
-  if (!confirm('Supprimer ce deck et toutes ses cartes ?')) return;
-  curFolder.decks = curFolder.decks.filter(d => d.id !== editingDeckId);
-  save(); closeModal('deck-modal'); renderFolder(); showScreen('folder-screen');
-}
-
-// ════════════════════════════════════════════
-//  MODALS — CARD
-// ════════════════════════════════════════════
-function openCardModal(cardId) {
-  editingCardId = cardId || null;
-  const c = cardId ? curDeck.cards.find(x => x.id === cardId) : null;
-  const isVocab = curDeck.type === 'vocab';
-  document.getElementById('card-modal-title').textContent = cardId ? 'Modifier la carte' : 'Nouvelle carte';
-  document.getElementById('card-fields-classic').style.display = isVocab ? 'none' : 'block';
-  document.getElementById('card-fields-vocab').style.display = isVocab ? 'block' : 'none';
-  document.getElementById('card-delete-btn').style.display = cardId ? 'block' : 'none';
-  if (isVocab) {
-    document.getElementById('cm-word').value = c ? c.q : '';
-    document.getElementById('cm-def').value = c ? c.a : '';
-    document.getElementById('cm-ex').value = c ? c.e : '';
-  } else {
-    document.getElementById('cm-q').value = c ? c.q : '';
-    document.getElementById('cm-a').value = c ? c.a : '';
-    document.getElementById('cm-e').value = c ? c.e : '';
-  }
+function openCardModal(id){
+  editingCardId=id||null;const c=id?curDeck.cards.find(x=>x.id===id):null;const isVocab=curDeck.type==='vocab';
+  document.getElementById('card-modal-title').textContent=id?'Modifier la carte':'Nouvelle carte';
+  document.getElementById('card-fields-classic').style.display=isVocab?'none':'block';
+  document.getElementById('card-fields-vocab').style.display=isVocab?'block':'none';
+  document.getElementById('card-delete-btn').style.display=id?'block':'none';
+  if(isVocab){document.getElementById('cm-word').value=c?c.q:'';document.getElementById('cm-def').value=c?c.a:'';document.getElementById('cm-ex').value=c?c.e:'';}
+  else{document.getElementById('cm-q').value=c?c.q:'';document.getElementById('cm-a').value=c?c.a:'';document.getElementById('cm-e').value=c?c.e:'';}
   document.getElementById('card-modal').classList.add('open');
 }
-
-function saveCard() {
-  const isVocab = curDeck.type === 'vocab';
-  const q = isVocab ? document.getElementById('cm-word').value.trim() : document.getElementById('cm-q').value.trim();
-  const a = isVocab ? document.getElementById('cm-def').value.trim() : document.getElementById('cm-a').value.trim();
-  const e = isVocab ? document.getElementById('cm-ex').value.trim() : document.getElementById('cm-e').value.trim();
-  if (!q || !a) return;
-  if (editingCardId) {
-    const c = curDeck.cards.find(x => x.id === editingCardId);
-    c.q = q; c.a = a; c.e = e;
-  } else {
-    curDeck.cards.push({ id:'c'+Date.now(), q, a, e, srs:{interval:1,ease:2.5,due:0,reps:0} });
-  }
-  save(); closeModal('card-modal'); renderDeck();
+function saveCard(){
+  const isVocab=curDeck.type==='vocab';
+  const q=isVocab?document.getElementById('cm-word').value.trim():document.getElementById('cm-q').value.trim();
+  const a=isVocab?document.getElementById('cm-def').value.trim():document.getElementById('cm-a').value.trim();
+  const e=isVocab?document.getElementById('cm-ex').value.trim():document.getElementById('cm-e').value.trim();
+  if(!q||!a)return;
+  if(editingCardId){const c=curDeck.cards.find(x=>x.id===editingCardId);c.q=q;c.a=a;c.e=e;}
+  else curDeck.cards.push({id:'c'+Date.now(),q,a,e,srs:{interval:1,ease:2.5,due:0,reps:0}});
+  save();closeModal('card-modal');renderDeck();
 }
+function deleteCard(){if(!confirm('Supprimer cette carte ?'))return;curDeck.cards=curDeck.cards.filter(c=>c.id!==editingCardId);save();closeModal('card-modal');renderDeck();}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
 
-function deleteCard() {
-  if (!confirm('Supprimer cette carte ?')) return;
-  curDeck.cards = curDeck.cards.filter(c => c.id !== editingCardId);
-  save(); closeModal('card-modal'); renderDeck();
-}
-
-function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-
-// ════════════════════════════════════════════
-//  INIT
-// ════════════════════════════════════════════
 renderHome();
-if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
+if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
 </body>
 </html>
